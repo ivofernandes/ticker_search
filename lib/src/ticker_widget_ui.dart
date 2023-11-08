@@ -7,9 +7,11 @@ class TickerWidget extends StatelessWidget {
   final Function? onSelection;
 
   const TickerWidget({
-    required this.symbol, this.description = '', this.onSelection,
-      super.key,
-      });
+    required this.symbol,
+    this.description = '',
+    this.onSelection,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) => InkWell(

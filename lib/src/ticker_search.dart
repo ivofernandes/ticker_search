@@ -14,12 +14,12 @@ class TickerSearch extends SearchDelegate<List<StockTicker>> {
 
   @override
   List<Widget> buildActions(BuildContext context) => [
-    IconButton(
-        icon: const Icon(Icons.clear),
-        onPressed: () {
-          query = '';
-        }),
-  ];
+        IconButton(
+            icon: const Icon(Icons.clear),
+            onPressed: () {
+              query = '';
+            }),
+      ];
 
   @override
   Widget buildLeading(BuildContext context) => IconButton(
@@ -31,11 +31,11 @@ class TickerSearch extends SearchDelegate<List<StockTicker>> {
   @override
   Widget buildResults(BuildContext context) => InkWell(
       onTap: () => close(context, [
-        StockTicker(
-          symbol: query.toUpperCase(),
-          description: query.toUpperCase(),
-        )
-      ]),
+            StockTicker(
+              symbol: query.toUpperCase(),
+              description: query.toUpperCase(),
+            )
+          ]),
       child: TickerWidget(
         symbol: query.toUpperCase(),
         onSelection: (StockTicker ticker) {
@@ -46,17 +46,21 @@ class TickerSearch extends SearchDelegate<List<StockTicker>> {
   @override
   Widget buildSuggestions(BuildContext context) {
     final Widget searchingWidget = query.isNotEmpty
-        ? TickerWidget(symbol: query.toUpperCase(), onSelection: (StockTicker ticker) => close(context, [ticker]))
+        ? TickerWidget(
+            symbol: query.toUpperCase(),
+            onSelection: (StockTicker ticker) => close(context, [ticker]))
         : Container();
 
     List<Widget> suggestionWidgets = [searchingWidget];
-    suggestionWidgets.addAll(suggestions.map((suggestion) => TickersBlock(
-      icon: suggestion.icon,
-      title: suggestion.title,
-      tickers: suggestion.companies,
-      query: query,
-      close: close,
-    )).toList());
+    suggestionWidgets.addAll(suggestions
+        .map((suggestion) => TickersBlock(
+              icon: suggestion.icon,
+              title: suggestion.title,
+              tickers: suggestion.companies,
+              query: query,
+              close: close,
+            ))
+        .toList());
 
     return SingleChildScrollView(
       child: Column(

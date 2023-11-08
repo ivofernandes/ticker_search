@@ -26,7 +26,9 @@ class TickersBlock extends StatelessWidget {
     final List<String> filteredKeys = keys.where((element) {
       final String lowerCaseQuery = query.toString().toLowerCase();
 
-      final bool containsQuery = element.toLowerCase().contains(lowerCaseQuery) ||
+      final bool containsQuery = element
+              .toLowerCase()
+              .contains(lowerCaseQuery) ||
           tickers[element].toString().toLowerCase().contains(lowerCaseQuery);
 
       return containsQuery;
@@ -61,13 +63,14 @@ class TickersBlock extends StatelessWidget {
 
   /// Create a suggestion title that divide sectors from country etf etc
   /// @returns a widget ready
-  Widget suggestionTitle(
-          Widget icon, String s, List<String> filteredKeys, Map<String, String> tickers, BuildContext context) =>
+  Widget suggestionTitle(Widget icon, String s, List<String> filteredKeys,
+          Map<String, String> tickers, BuildContext context) =>
       ListTile(
         leading: icon,
         title: Text(s),
         trailing: MaterialButton(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           color: Theme.of(context).colorScheme.primary,
           child: const Text('Add all'),
           onPressed: () {

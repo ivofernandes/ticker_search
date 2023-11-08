@@ -1,7 +1,4 @@
 library ticker_search;
 
-/// A Calculator.
-class Calculator {
-  /// Returns [value] plus 1.
-  int addOne(int value) => value + 1;
-}
+export 'package:ticker_search/src/ticker_search.dart';
+export 'package:ticker_search/src/model/ticker_suggestion.dart';

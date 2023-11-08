@@ -5,5 +5,9 @@ class TickerSuggestion {
   final String title;
   final Map<String, String> companies;
 
-  TickerSuggestion(this.icon, this.title, this.companies);
+  TickerSuggestion(
+    this.icon,
+    this.title,
+    this.companies,
+  );
 }
