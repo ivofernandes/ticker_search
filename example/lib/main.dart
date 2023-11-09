@@ -35,12 +35,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -54,24 +48,6 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class SearchWidget extends StatefulWidget {
-  static List<TickerSuggestion> suggestions = [
-    TickerSuggestion(const Icon(Icons.view_headline), 'Main', TickersList.main),
-    TickerSuggestion(
-        const Icon(Icons.business_sharp), 'Companies', TickersList.companies),
-    TickerSuggestion(const Icon(Icons.precision_manufacturing_outlined),
-        'Sectors', TickersList.sectors),
-    TickerSuggestion(
-        const Icon(Icons.workspaces_outline), 'Futures', TickersList.futures),
-    TickerSuggestion(
-        const Icon(Icons.computer), 'Cryptos', TickersList.cryptoCurrencies),
-    TickerSuggestion(
-        const Icon(Icons.language), 'Countries', TickersList.countries),
-    TickerSuggestion(
-        const Icon(Icons.account_balance_outlined), 'Bonds', TickersList.bonds),
-    TickerSuggestion(
-        const Icon(Icons.architecture_sharp), 'Sizes', TickersList.sizes),
-  ];
-
   const SearchWidget();
 
   @override
@@ -79,31 +55,51 @@ class SearchWidget extends StatefulWidget {
 }
 
 class _SearchWidgetState extends State<SearchWidget> {
-  StockTicker selected = StockTicker(symbol: '');
+  StockTicker selected = const StockTicker(symbol: '');
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-
     final String ticketDescription =
         TickerResolve.getTickerDescription(selected);
-
-    final TickerSearch tickerSearch = TickerSearch(
-        searchFieldLabel: 'Add', suggestions: SearchWidget.suggestions);
 
     return Column(
       children: [
         Text('Selected: ${selected.symbol} > $ticketDescription'),
         InkWell(
           child: Container(
-              color: Colors.lightBlue.withOpacity(0),
-              padding: const EdgeInsets.only(left: 40, right: 40, bottom: 30),
-              child: const Icon(
-                Icons.add,
-              )),
+            color: Colors.lightBlue.withOpacity(0),
+            padding: const EdgeInsets.only(left: 40, right: 40, bottom: 30),
+            child: const Icon(
+              Icons.add,
+            ),
+          ),
           onTap: () async {
-            final List<StockTicker>? tickers =
-                await showSearch(context: context, delegate: tickerSearch);
+            final List<StockTicker>? tickers = await showSearch(
+              context: context,
+              delegate: TickerSearch(
+                searchFieldLabel: 'Add',
+                suggestions: [
+                  TickerSuggestion(const Icon(Icons.view_headline), 'Main',
+                      TickersList.main),
+                  TickerSuggestion(const Icon(Icons.business_sharp),
+                      'Companies', TickersList.companies),
+                  TickerSuggestion(
+                      const Icon(Icons.precision_manufacturing_outlined),
+                      'Sectors',
+                      TickersList.sectors),
+                  TickerSuggestion(const Icon(Icons.workspaces_outline),
+                      'Futures', TickersList.futures),
+                  TickerSuggestion(const Icon(Icons.computer), 'Cryptos',
+                      TickersList.cryptoCurrencies),
+                  TickerSuggestion(const Icon(Icons.language), 'Countries',
+                      TickersList.countries),
+                  TickerSuggestion(const Icon(Icons.account_balance_outlined),
+                      'Bonds', TickersList.bonds),
+                  TickerSuggestion(const Icon(Icons.architecture_sharp),
+                      'Sizes', TickersList.sizes),
+                ],
+              ),
+            );
 
             if (tickers != null && tickers.isNotEmpty) {
               setState(() {
