@@ -75,12 +75,13 @@ class TickersBlock extends StatelessWidget {
           child: const Text('Add all'),
           onPressed: () {
             final List<StockTicker> result = [];
-            filteredKeys.forEach((element) {
-              final String symbol = element.toString();
-              result.add(StockTicker(
-                symbol: symbol,
-                description: tickers[symbol],
-              ));
+            filteredKeys.forEach((String symbol) {
+              result.add(
+                StockTicker(
+                  symbol: symbol,
+                  description: tickers[symbol],
+                ),
+              );
             });
             // Finish the search passing a result
             close(context, result);

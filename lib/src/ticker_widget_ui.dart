@@ -1,11 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:stock_market_data/stock_market_data.dart';
 
+/// A widget that displays a stock ticker symbol and its description.
+/// When tapped, it calls the provided [onSelection] callback, if any, with the stock ticker data.
+///
+/// The widget uses an [InkWell] to respond to taps and a [Card] to display its contents.
 class TickerWidget extends StatelessWidget {
+  /// The stock ticker symbol, e.g., "AAPL" for Apple Inc.
   final String symbol;
+
+  /// Optional description for the stock ticker, e.g., "Apple Inc."
   final String description;
+
+  /// Callback function to be called when the ticker is selected.
+  /// It passes a [StockTicker] object with the symbol and description.
   final Function? onSelection;
 
+  /// Creates a [TickerWidget].
+  ///
+  /// Requires a [symbol] to be provided and optionally a [description],
+  /// and an [onSelection] callback.
   const TickerWidget({
     required this.symbol,
     this.description = '',
@@ -17,10 +31,12 @@ class TickerWidget extends StatelessWidget {
   Widget build(BuildContext context) => InkWell(
         onTap: () {
           if (onSelection != null) {
-            onSelection!(StockTicker(
-              symbol: symbol,
-              description: description,
-            ));
+            onSelection!(
+              StockTicker(
+                symbol: symbol,
+                description: description,
+              ),
+            );
           }
         },
         child: Padding(
@@ -29,17 +45,24 @@ class TickerWidget extends StatelessWidget {
             child: Row(
               children: [
                 ConstrainedBox(
-                    constraints: const BoxConstraints(
-                      minHeight: 30,
-                      minWidth: 80,
-                      maxHeight: 30,
+                  constraints: const BoxConstraints(
+                    minHeight: 30,
+                    minWidth: 80,
+                    maxHeight: 30,
+                  ),
+                  child: ColoredBox(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .background
+                        .withOpacity(0.3),
+                    child: Center(
+                      child: Text(
+                        symbol.toUpperCase(),
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
                     ),
-                    child: Container(
-                      color: Theme.of(context).backgroundColor.withOpacity(0.3),
-                      child: Center(
-                          child: Text(symbol.toUpperCase(),
-                              style: Theme.of(context).textTheme.headline6)),
-                    )),
+                  ),
+                ),
                 const SizedBox(width: 10),
                 Text(description),
               ],

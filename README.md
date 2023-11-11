@@ -10,10 +10,7 @@ A Flutter package for searching stock tickers in your app.
 - Material 3 design.
 - Returns a `StockTicker` object with the selected ticker symbol.
 
-## Getting Started
-
 ### Prerequisites
-
 Before you begin, ensure you have Flutter installed on your development machine. If you haven't, visit [Flutter's official website](https://flutter.dev/) to get started.
 
 ### Installation
@@ -54,4 +51,10 @@ final List<StockTicker>? tickers = await showSearch(
   ),
 );
 ```
+
+### Example
+
+You can check the example application and see how to use the package.
+
+![Pluralize demo](https://raw.githubusercontent.com/ivofernandes/ticker_search/main/doc/search_ticker_search.png)
 
