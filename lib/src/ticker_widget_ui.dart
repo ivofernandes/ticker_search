@@ -51,10 +51,7 @@ class TickerWidget extends StatelessWidget {
                     maxHeight: 30,
                   ),
                   child: ColoredBox(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .background
-                        .withOpacity(0.3),
+                    color: Theme.of(context).colorScheme.background.withOpacity(0.3),
                     child: Center(
                       child: Text(
                         symbol.toUpperCase(),
@@ -64,7 +61,9 @@ class TickerWidget extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 10),
-                Text(description),
+                Expanded(
+                  child: Text(description),
+                ),
               ],
             ),
           ),
