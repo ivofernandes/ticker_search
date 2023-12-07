@@ -13,8 +13,8 @@ class TickerSearch extends SearchDelegate<List<StockTicker>> {
 
   /// Constructs a [TickerSearch] with an optional search field label and required suggestions.
   TickerSearch({
-    super.searchFieldLabel,
     required this.suggestions,
+    super.searchFieldLabel,
   });
 
   @override
@@ -67,7 +67,8 @@ class TickerSearch extends SearchDelegate<List<StockTicker>> {
   }
 
   // Helper method to create the title widget
-  Widget suggestionTitle(Widget icon, String title, BuildContext context) => ListTile(
+  Widget suggestionTitle(Widget icon, String title, BuildContext context) =>
+      ListTile(
         leading: icon,
         title: Text(title),
       );
@@ -77,8 +78,9 @@ class TickerSearch extends SearchDelegate<List<StockTicker>> {
         child: Row(
           children: suggestions.map((suggestion) {
             final selected = suggestion.title == query;
-            final color =
-                selected ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.onBackground;
+            final color = selected
+                ? Theme.of(context).colorScheme.secondary
+                : Theme.of(context).colorScheme.onBackground;
             return MaterialButton(
               child: Row(
                 children: [
@@ -109,14 +111,18 @@ class TickerSearch extends SearchDelegate<List<StockTicker>> {
 
     if (query.isNotEmpty) {
       allItems.add(
-        TickerWidget(symbol: query.toUpperCase(), onSelection: (StockTicker ticker) => close(context, [ticker])),
+        TickerWidget(
+            symbol: query.toUpperCase(),
+            onSelection: (StockTicker ticker) => close(context, [ticker])),
       );
     }
 
-    final List<String> suggestionsTitles = suggestions.map((e) => e.title).toList();
+    final List<String> suggestionsTitles =
+        suggestions.map((e) => e.title).toList();
 
     if (suggestionsTitles.contains(query)) {
-      final TickerSuggestion tickerSuggestion = suggestions.where((element) => element.title == query).toList().first;
+      final TickerSuggestion tickerSuggestion =
+          suggestions.where((element) => element.title == query).toList().first;
 
       addSuggestionToItems(tickerSuggestion, context, allItems, false);
     } else {
@@ -129,8 +135,8 @@ class TickerSearch extends SearchDelegate<List<StockTicker>> {
     return allItems;
   }
 
-  void addSuggestionToItems(
-      TickerSuggestion suggestion, BuildContext context, List<Widget> allItems, bool filterByText) {
+  void addSuggestionToItems(TickerSuggestion suggestion, BuildContext context,
+      List<Widget> allItems, bool filterByText) {
     // Add title widget
     allItems.add(suggestionTitle(suggestion.icon, suggestion.title, context));
 
@@ -140,7 +146,8 @@ class TickerSearch extends SearchDelegate<List<StockTicker>> {
     if (filterByText) {
       filteredTickers = filteredTickers.where((entry) {
         final String lowerCaseQuery = query.toLowerCase();
-        return entry.key.toLowerCase().contains(lowerCaseQuery) || entry.value.toLowerCase().contains(lowerCaseQuery);
+        return entry.key.toLowerCase().contains(lowerCaseQuery) ||
+            entry.value.toLowerCase().contains(lowerCaseQuery);
       });
     }
 

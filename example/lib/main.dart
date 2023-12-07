@@ -52,7 +52,9 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class SearchWidget extends StatefulWidget {
-  const SearchWidget();
+  const SearchWidget({
+    super.key,
+  });
 
   @override
   State<SearchWidget> createState() => _SearchWidgetState();
@@ -63,7 +65,8 @@ class _SearchWidgetState extends State<SearchWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final String ticketDescription = TickerResolve.getTickerDescription(selected);
+    final String ticketDescription =
+        TickerResolve.getTickerDescription(selected);
 
     return Column(
       children: [
@@ -71,7 +74,11 @@ class _SearchWidgetState extends State<SearchWidget> {
         InkWell(
           child: Container(
             color: Colors.lightBlue.withOpacity(0),
-            padding: const EdgeInsets.only(left: 40, right: 40, bottom: 30),
+            padding: const EdgeInsets.only(
+              left: 40,
+              right: 40,
+              bottom: 30,
+            ),
             child: const Icon(
               Icons.add,
             ),
@@ -82,14 +89,24 @@ class _SearchWidgetState extends State<SearchWidget> {
               delegate: TickerSearch(
                 searchFieldLabel: 'Search ticker',
                 suggestions: [
-                  TickerSuggestion(const Icon(Icons.view_headline), 'Main', TickersList.main),
-                  TickerSuggestion(const Icon(Icons.business_sharp), 'Companies', TickersList.companies),
-                  TickerSuggestion(const Icon(Icons.precision_manufacturing_outlined), 'Sectors', TickersList.sectors),
-                  TickerSuggestion(const Icon(Icons.workspaces_outline), 'Futures', TickersList.futures),
-                  TickerSuggestion(const Icon(Icons.computer), 'Cryptos', TickersList.cryptoCurrencies),
-                  TickerSuggestion(const Icon(Icons.language), 'Countries', TickersList.countries),
-                  TickerSuggestion(const Icon(Icons.account_balance_outlined), 'Bonds', TickersList.bonds),
-                  TickerSuggestion(const Icon(Icons.architecture_sharp), 'Sizes', TickersList.sizes),
+                  TickerSuggestion(const Icon(Icons.view_headline), 'Main',
+                      TickersList.main),
+                  TickerSuggestion(const Icon(Icons.business_sharp),
+                      'Companies', TickersList.companies),
+                  TickerSuggestion(
+                      const Icon(Icons.precision_manufacturing_outlined),
+                      'Sectors',
+                      TickersList.sectors),
+                  TickerSuggestion(const Icon(Icons.workspaces_outline),
+                      'Futures', TickersList.futures),
+                  TickerSuggestion(const Icon(Icons.computer), 'Cryptos',
+                      TickersList.cryptoCurrencies),
+                  TickerSuggestion(const Icon(Icons.language), 'Countries',
+                      TickersList.countries),
+                  TickerSuggestion(const Icon(Icons.account_balance_outlined),
+                      'Bonds', TickersList.bonds),
+                  TickerSuggestion(const Icon(Icons.architecture_sharp),
+                      'Sizes', TickersList.sizes),
                 ],
               ),
             );

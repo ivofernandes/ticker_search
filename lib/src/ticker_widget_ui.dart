@@ -14,7 +14,7 @@ class TickerWidget extends StatelessWidget {
 
   /// Callback function to be called when the ticker is selected.
   /// It passes a [StockTicker] object with the symbol and description.
-  final Function? onSelection;
+  final Function(StockTicker)? onSelection;
 
   /// Creates a [TickerWidget].
   ///
@@ -51,7 +51,10 @@ class TickerWidget extends StatelessWidget {
                     maxHeight: 30,
                   ),
                   child: ColoredBox(
-                    color: Theme.of(context).colorScheme.background.withOpacity(0.3),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .background
+                        .withOpacity(0.3),
                     child: Center(
                       child: Text(
                         symbol.toUpperCase(),
