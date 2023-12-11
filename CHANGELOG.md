@@ -6,3 +6,6 @@ Improved documentation
 
 ## 0.0.3
 Improved performance
+
+## 0.0.4
+Added buttons to filter different assets

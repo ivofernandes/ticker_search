@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:stock_market_data/stock_market_data.dart';
 import 'package:ticker_search/src/ticker_widget_ui.dart';
 
+/// A widget to display a list of stock tickers based on a search query.
 class TickersBlock extends StatelessWidget {
   final Widget icon;
   final String title;
@@ -9,6 +10,13 @@ class TickersBlock extends StatelessWidget {
   final String query;
   final Function close;
 
+  /// Constructs a [TickersBlock] widget.
+  ///
+  /// [icon] - The icon displayed next to the title.
+  /// [title] - The title of the tickers block.
+  /// [tickers] - A map of ticker symbols to their descriptions.
+  /// [query] - The search query to filter the tickers.
+  /// [close] - The function to call when a ticker is selected.
   const TickersBlock({
     required this.icon,
     required this.title,
@@ -21,71 +29,70 @@ class TickersBlock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<String> keys = tickers.keys.toList();
+    final String lowerCaseQuery = query.toLowerCase();
 
-    // Filter keys by text added
-    final List<String> filteredKeys = keys.where((element) {
-      final String lowerCaseQuery = query.toString().toLowerCase();
+    final List<String> filteredKeys = keys
+        .where((element) =>
+            element.toLowerCase().contains(lowerCaseQuery) ||
+            tickers[element]!.toLowerCase().contains(lowerCaseQuery))
+        .toList();
 
-      final bool containsQuery = element
-              .toLowerCase()
-              .contains(lowerCaseQuery) ||
-          tickers[element].toString().toLowerCase().contains(lowerCaseQuery);
-
-      return containsQuery;
-    }).toList();
-
-    final int size = filteredKeys.length;
-
-    return size > 0
+    return filteredKeys.isNotEmpty
         ? Column(
             children: [
-              suggestionTitle(icon, title, filteredKeys, tickers, context),
-              ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: size,
-                itemBuilder: (BuildContext context, int index) {
-                  final String symbol = filteredKeys[index];
-                  return TickerWidget(
-                    symbol: symbol,
-                    description: tickers[symbol]!,
-                    onSelection: (StockTicker ticker) {
-                      close(context, <StockTicker>[ticker]);
-                    },
-                  );
-                  // return tickerWidget(context, symbol, tickers[symbol]!);
-                },
-              ),
+              _suggestionTitle(icon, title, filteredKeys, tickers, context),
+              _buildListView(context, filteredKeys),
             ],
           )
         : const SizedBox();
   }
 
-  /// Create a suggestion title that divide sectors from country etf etc
-  /// @returns a widget ready
-  Widget suggestionTitle(Widget icon, String s, List<String> filteredKeys,
-          Map<String, String> tickers, BuildContext context) =>
+  /// Creates a title widget with an 'Add all' button.
+  Widget _suggestionTitle(
+    Widget icon,
+    String title,
+    List<String> filteredKeys,
+    Map<String, String> tickers,
+    BuildContext context,
+  ) =>
       ListTile(
         leading: icon,
-        title: Text(s),
+        title: Text(title),
         trailing: MaterialButton(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           color: Theme.of(context).colorScheme.primary,
           child: const Text('Add all'),
-          onPressed: () {
-            final List<StockTicker> result = [];
-            filteredKeys.forEach((String symbol) {
-              result.add(
-                StockTicker(
-                  symbol: symbol,
-                  description: tickers[symbol],
-                ),
-              );
-            });
-            // Finish the search passing a result
-            close(context, result);
-          },
+          onPressed: () => _addAll(filteredKeys, tickers, context),
         ),
       );
+
+  /// Builds a ListView of ticker widgets.
+  Widget _buildListView(BuildContext context, List<String> filteredKeys) =>
+      ListView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: filteredKeys.length,
+        itemBuilder: (BuildContext context, int index) {
+          final String symbol = filteredKeys[index];
+          return TickerWidget(
+            symbol: symbol,
+            description: tickers[symbol]!,
+            onSelection: (StockTicker ticker) =>
+                close(context, <StockTicker>[ticker]),
+          );
+        },
+      );
+
+  /// Handles the 'Add all' button press.
+  void _addAll(List<String> filteredKeys, Map<String, String> tickers,
+      BuildContext context) {
+    final List<StockTicker> result = filteredKeys
+        .map((symbol) => StockTicker(
+              symbol: symbol,
+              description: tickers[symbol],
+            ))
+        .toList();
+    close(context, result);
+  }
 }
