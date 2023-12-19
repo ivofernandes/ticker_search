@@ -133,7 +133,11 @@ class _SearchWidgetState extends State<SearchWidget> {
 
             if (tickers != null && tickers.isNotEmpty) {
               setState(() {
-                selected = tickers.first;
+                // Reduce the list to a single text with all the symbols
+                selected = tickers.reduce((value, element) => value.copyWith(
+                      symbol: '${value.symbol}, ${element.symbol}',
+                      description: '',
+                    ));
               });
             }
           },

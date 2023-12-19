@@ -9,3 +9,6 @@ Improved performance
 
 ## 0.0.4
 Added buttons to filter different assets
+
+## 0.0.5
+Put add all buttons again

@@ -11,9 +11,13 @@ class TickerSearch extends SearchDelegate<List<StockTicker>> {
   /// A list of [TickerSuggestion] that provides icon, title, and ticker information.
   final List<TickerSuggestion> suggestions;
 
+  /// Add all button
+  final Widget? addAllButton;
+
   /// Constructs a [TickerSearch] with an optional search field label and required suggestions.
   TickerSearch({
     required this.suggestions,
+    this.addAllButton,
     super.searchFieldLabel,
   });
 
@@ -67,18 +71,53 @@ class TickerSearch extends SearchDelegate<List<StockTicker>> {
   }
 
   // Helper method to create the title widget
-  Widget suggestionTitle(Widget icon, String title, BuildContext context) =>
-      ListTile(
-        leading: icon,
-        title: Text(title),
+  Widget suggestionTitle(
+    Widget icon,
+    String title,
+    BuildContext context,
+    Iterable<MapEntry<String, String>> filteredTickers,
+  ) {
+    onPressed() {
+      final List<StockTicker> tickers = filteredTickers.map((entry) {
+        return StockTicker(
+          symbol: entry.key,
+          description: entry.value,
+        );
+      }).toList();
+
+      close(context, tickers);
+    }
+
+    Widget addAllFinalButton = MaterialButton(
+      color: Theme.of(context).colorScheme.primary,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      onPressed: onPressed,
+      child: const Text('Add all'),
+    );
+
+    if (addAllButton != null) {
+      // Copy the button and add the onPressed
+      addAllFinalButton = InkWell(
+        onTap: onPressed,
+        child: addAllButton,
       );
+    }
+
+    return ListTile(
+      leading: icon,
+      title: Text(title),
+      trailing: addAllFinalButton,
+    );
+  }
 
   Widget selectionButtons(BuildContext context) => SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
           children: suggestions.map((suggestion) {
-            final selected = suggestion.title == query;
-            final color = selected
+            final bool selected = suggestion.title == query;
+            final Color color = selected
                 ? Theme.of(context).colorScheme.secondary
                 : Theme.of(context).colorScheme.onBackground;
             return MaterialButton(
@@ -112,8 +151,11 @@ class TickerSearch extends SearchDelegate<List<StockTicker>> {
     if (query.isNotEmpty) {
       allItems.add(
         TickerWidget(
-            symbol: query.toUpperCase(),
-            onSelection: (StockTicker ticker) => close(context, [ticker])),
+          symbol: query.toUpperCase(),
+          onSelection: (StockTicker ticker) {
+            close(context, [ticker]);
+          },
+        ),
       );
     }
 
@@ -137,12 +179,16 @@ class TickerSearch extends SearchDelegate<List<StockTicker>> {
 
   void addSuggestionToItems(TickerSuggestion suggestion, BuildContext context,
       List<Widget> allItems, bool filterByText) {
-    // Add title widget
-    allItems.add(suggestionTitle(suggestion.icon, suggestion.title, context));
-
     // Filter and add ticker widgets
-    var filteredTickers = suggestion.companies.entries;
+    Iterable<MapEntry<String, String>> filteredTickers =
+        suggestion.companies.entries;
 
+    // Add title widget
+    final Widget title = suggestionTitle(
+        suggestion.icon, suggestion.title, context, filteredTickers);
+    allItems.add(title);
+
+    // Apply possible filter
     if (filterByText) {
       filteredTickers = filteredTickers.where((entry) {
         final String lowerCaseQuery = query.toLowerCase();
