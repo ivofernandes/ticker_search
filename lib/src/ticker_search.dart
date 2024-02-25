@@ -105,43 +105,59 @@ class TickerSearch extends SearchDelegate<List<StockTicker>> {
       );
     }
 
-    return ListTile(
-      leading: icon,
-      title: Text(title),
-      trailing: addAllFinalButton,
+    final int size = filteredTickers.length;
+
+    return GestureDetector(
+      onTap: () {
+        // Unfocus keyboard
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: ListTile(
+        leading: icon,
+        title: Text('$title ($size)'),
+        trailing: addAllFinalButton,
+      ),
     );
   }
 
   Widget selectionButtons(BuildContext context) => SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        child: Row(
-          children: suggestions.map((suggestion) {
-            final bool selected = suggestion.title == query;
-            final Color color = selected
-                ? Theme.of(context).colorScheme.secondary
-                : Theme.of(context).colorScheme.onBackground;
-            return MaterialButton(
-              child: Row(
-                children: [
-                  ColorFiltered(
-                    colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-                    child: suggestion.icon,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    suggestion.title,
-                    style: TextStyle(
-                      color: color,
+        child: GestureDetector(
+          onTap: () {
+            // Unfocus keyboard
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
+          child: Row(
+            children: suggestions.map((suggestion) {
+              final bool selected = suggestion.title == query;
+              final Color color =
+                  selected ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.onBackground;
+              return MaterialButton(
+                child: Row(
+                  children: [
+                    ColorFiltered(
+                      colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+                      child: suggestion.icon,
                     ),
-                  ),
-                ],
-              ),
-              onPressed: () {
-                // Update the query with the selected suggestion title
-                query = suggestion.title;
-              },
-            );
-          }).toList(),
+                    const SizedBox(width: 8),
+                    Text(
+                      suggestion.title,
+                      style: TextStyle(
+                        color: color,
+                      ),
+                    ),
+                  ],
+                ),
+                onPressed: () {
+                  // Update the query with the selected suggestion title
+                  query = suggestion.title;
+
+                  // Unfocus keyboard
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
+              );
+            }).toList(),
+          ),
         ),
       );
 
@@ -159,12 +175,10 @@ class TickerSearch extends SearchDelegate<List<StockTicker>> {
       );
     }
 
-    final List<String> suggestionsTitles =
-        suggestions.map((e) => e.title).toList();
+    final List<String> suggestionsTitles = suggestions.map((e) => e.title).toList();
 
     if (suggestionsTitles.contains(query)) {
-      final TickerSuggestion tickerSuggestion =
-          suggestions.where((element) => element.title == query).toList().first;
+      final TickerSuggestion tickerSuggestion = suggestions.where((element) => element.title == query).toList().first;
 
       addSuggestionToItems(tickerSuggestion, context, allItems, false);
     } else {
@@ -177,23 +191,20 @@ class TickerSearch extends SearchDelegate<List<StockTicker>> {
     return allItems;
   }
 
-  void addSuggestionToItems(TickerSuggestion suggestion, BuildContext context,
-      List<Widget> allItems, bool filterByText) {
+  void addSuggestionToItems(
+      TickerSuggestion suggestion, BuildContext context, List<Widget> allItems, bool filterByText) {
     // Filter and add ticker widgets
-    Iterable<MapEntry<String, String>> filteredTickers =
-        suggestion.companies.entries;
+    Iterable<MapEntry<String, String>> filteredTickers = suggestion.tickers.entries;
 
     // Add title widget
-    final Widget title = suggestionTitle(
-        suggestion.icon, suggestion.title, context, filteredTickers);
+    final Widget title = suggestionTitle(suggestion.icon, suggestion.title, context, filteredTickers);
     allItems.add(title);
 
     // Apply possible filter
     if (filterByText) {
       filteredTickers = filteredTickers.where((entry) {
         final String lowerCaseQuery = query.toLowerCase();
-        return entry.key.toLowerCase().contains(lowerCaseQuery) ||
-            entry.value.toLowerCase().contains(lowerCaseQuery);
+        return entry.key.toLowerCase().contains(lowerCaseQuery) || entry.value.toLowerCase().contains(lowerCaseQuery);
       });
     }
 

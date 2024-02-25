@@ -12,3 +12,6 @@ Added buttons to filter different assets
 
 ## 0.0.5
 Put add all buttons again
+
+## 0.0.6
+Better focus/unfocus handling

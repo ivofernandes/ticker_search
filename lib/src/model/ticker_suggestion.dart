@@ -11,17 +11,17 @@ class TickerSuggestion {
   /// The title of the suggestion, which could be a market segment or category.
   final String title;
 
-  /// A mapping of ticker symbols to company names.
-  final Map<String, String> companies;
+  /// A mapping of ticker symbols to ticker names.
+  final Map<String, String> tickers;
 
-  /// Constructs a [TickerSuggestion] with the specified [icon], [title], and [companies].
+  /// Constructs a [TickerSuggestion] with the specified [icon], [title], and [tickers].
   ///
   /// The [icon] is usually an image or an icon that represents the suggestion.
   /// The [title] is a string that represents the category or type of the tickers.
-  /// The [companies] is a map where the key is the ticker symbol and the value is the company name.
+  /// The [tickers] is a map where the key is the ticker symbol and the value is the company name.
   TickerSuggestion(
     this.icon,
     this.title,
-    this.companies,
+    this.tickers,
   );
 }
