@@ -15,3 +15,6 @@ Put add all buttons again
 
 ## 0.0.6
 Better focus/unfocus handling
+
+## 0.0.7
+Updated on flutter

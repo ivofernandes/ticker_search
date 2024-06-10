@@ -5,7 +5,8 @@ import 'package:ticker_search/src/ticker_widget_ui.dart';
 
 void main() {
   // Helper function to create the TickerWidget with a mock callback
-  Widget createTickerWidget(Function(StockTicker)? onSelection) => MaterialApp(
+  Widget createTickerWidget(void Function(StockTicker)? onSelection) =>
+      MaterialApp(
         home: Scaffold(
           body: TickerWidget(
             symbol: 'AAPL',

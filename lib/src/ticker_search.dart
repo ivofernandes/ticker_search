@@ -77,13 +77,13 @@ class TickerSearch extends SearchDelegate<List<StockTicker>> {
     BuildContext context,
     Iterable<MapEntry<String, String>> filteredTickers,
   ) {
-    onPressed() {
-      final List<StockTicker> tickers = filteredTickers.map((entry) {
-        return StockTicker(
-          symbol: entry.key,
-          description: entry.value,
-        );
-      }).toList();
+    void onPressed() {
+      final List<StockTicker> tickers = filteredTickers
+          .map((entry) => StockTicker(
+                symbol: entry.key,
+                description: entry.value,
+              ))
+          .toList();
 
       close(context, tickers);
     }
@@ -132,7 +132,7 @@ class TickerSearch extends SearchDelegate<List<StockTicker>> {
               final bool selected = suggestion.title == query;
               final Color color = selected
                   ? Theme.of(context).colorScheme.secondary
-                  : Theme.of(context).colorScheme.onBackground;
+                  : Theme.of(context).colorScheme.onSurface;
               return MaterialButton(
                 child: Row(
                   children: [
