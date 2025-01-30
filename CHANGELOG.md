@@ -18,3 +18,6 @@ Better focus/unfocus handling
 
 ## 0.0.7
 Updated on flutter
+
+## 0.0.8
+Updated stock_market_data

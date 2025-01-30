@@ -19,8 +19,8 @@ Add `ticker_search` to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  ticker_search: ^0.0.1
-  stock_market_data: ^0.0.9
+  ticker_search: ^0.0.8
+  stock_market_data: ^0.1.3
 ```
 
 ### Usage

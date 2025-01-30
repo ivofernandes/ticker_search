@@ -93,6 +93,11 @@ class _SearchWidgetState extends State<SearchWidget> {
                     TickersList.main,
                   ),
                   TickerSuggestion(
+                    const Icon(Icons.euro),
+                    'Euro ETFs',
+                    TickersList.europeanEtfs,
+                  ),
+                  TickerSuggestion(
                     const Icon(Icons.business_sharp),
                     'Companies',
                     TickersList.companies,
