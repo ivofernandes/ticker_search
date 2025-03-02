@@ -7,13 +7,6 @@ void main() {
   runApp(const MyApp());
 }
 
-/// Helper class to return both the selected tickers and, if applicable, the suggestion button value.
-class SearchResult {
-  final List<StockTicker> tickers;
-  final String? suggestion;
-  SearchResult(this.tickers, this.suggestion);
-}
-
 /// The root widget.
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -115,59 +108,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-/// A full‑screen page that wraps TickerSearchWidget.
-/// When tickers are selected, it pops with a SearchResult containing the tickers and, if applicable,
-/// the suggestion button event.
-class TickerSearchPage extends StatefulWidget {
-  final String initialQuery;
-  final ScrollController scrollController;
-  final List<TickerSuggestion> suggestions;
-
-  const TickerSearchPage({
-    Key? key,
-    required this.initialQuery,
-    required this.scrollController,
-    required this.suggestions,
-  }) : super(key: key);
-
-  @override
-  _TickerSearchPageState createState() => _TickerSearchPageState();
-}
-
-class _TickerSearchPageState extends State<TickerSearchPage> {
-  // This variable will capture the suggestion button pressed (if any).
-  String? selectedSuggestion;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Search Ticker'),
-      ),
-      body: TickerSearchWidget(
-        suggestions: widget.suggestions,
-        initialQuery: widget.initialQuery,
-        scrollController: widget.scrollController,
-        onGeneralQueryChanged: (newQuery) {
-          // General text field changes.
-          print("General query changed: $newQuery");
-        },
-        onSuggestionButtonPressed: (suggestion) {
-          // When a suggestion button is pressed, store its value.
-          print("Suggestion button pressed: $suggestion");
-          setState(() {
-            selectedSuggestion = suggestion;
-          });
-        },
-        onTickersSelected: (tickers) {
-          // Return a SearchResult with the selected tickers and the suggestion (if any).
-          Navigator.pop(context, SearchResult(tickers, selectedSuggestion));
-        },
       ),
     );
   }

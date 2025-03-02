@@ -19,9 +19,6 @@ class TickerSearchWidget extends StatefulWidget {
   /// The initial query to prefill the search field.
   final String initialQuery;
 
-  /// Callback triggered when the general query (from the text field) changes.
-  final void Function(String)? onGeneralQueryChanged;
-
   /// Callback triggered when a suggestion button is pressed.
   final void Function(String)? onSuggestionButtonPressed;
 
@@ -34,7 +31,6 @@ class TickerSearchWidget extends StatefulWidget {
     this.addAllButton,
     this.scrollController,
     this.initialQuery = '',
-    this.onGeneralQueryChanged,
     this.onSuggestionButtonPressed,
     this.onTickersSelected,
   }) : super(key: key);
@@ -85,7 +81,6 @@ class _TickerSearchWidgetState extends State<TickerSearchWidget> {
                     query = '';
                     _controller.clear();
                   });
-                  widget.onGeneralQueryChanged?.call('');
                 },
               )
                   : null,
@@ -95,7 +90,6 @@ class _TickerSearchWidgetState extends State<TickerSearchWidget> {
               setState(() {
                 query = value;
               });
-              widget.onGeneralQueryChanged?.call(query);
             },
           ),
         ),
