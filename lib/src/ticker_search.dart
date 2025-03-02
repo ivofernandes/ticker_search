@@ -3,133 +3,110 @@ import 'package:stock_market_data/stock_market_data.dart';
 import 'package:ticker_search/src/model/ticker_suggestion.dart';
 import 'package:ticker_search/src/ticker_widget_ui.dart';
 
-/// A search delegate that allows users to search for stock tickers.
-///
-/// It uses the [SearchDelegate] class to manage the search state and build the UI based on
-/// the current search query. It displays search results and suggestions as the user types.
-class TickerSearch extends SearchDelegate<List<StockTicker>> {
+/// A normal widget that provides ticker search functionality.
+/// It features a text field for entering queries, horizontal selection buttons,
+/// and a scrollable list of ticker suggestions.
+class TickerSearchWidget extends StatefulWidget {
   /// A list of [TickerSuggestion] that provides icon, title, and ticker information.
   final List<TickerSuggestion> suggestions;
 
-  /// Add all button
+  /// Optional "Add all" button widget.
   final Widget? addAllButton;
 
-  /// Constructs a [TickerSearch] with an optional search field label and required suggestions.
-  TickerSearch({
+  /// External scroll controller to preserve scroll state.
+  final ScrollController? scrollController;
+
+  /// The initial query to prefill the search field.
+  final String initialQuery;
+
+  /// Callback triggered when the general query (from the text field) changes.
+  final void Function(String)? onGeneralQueryChanged;
+
+  /// Callback triggered when a suggestion button is pressed.
+  final void Function(String)? onSuggestionButtonPressed;
+
+  /// Callback to notify when one or more tickers are selected.
+  final void Function(List<StockTicker>)? onTickersSelected;
+
+  const TickerSearchWidget({
+    Key? key,
     required this.suggestions,
     this.addAllButton,
-    super.searchFieldLabel,
-  });
+    this.scrollController,
+    this.initialQuery = '',
+    this.onGeneralQueryChanged,
+    this.onSuggestionButtonPressed,
+    this.onTickersSelected,
+  }) : super(key: key);
 
   @override
-  List<Widget> buildActions(BuildContext context) => [
-        IconButton(
-            icon: const Icon(Icons.clear),
-            onPressed: () {
-              query = '';
-            }),
-      ];
+  _TickerSearchWidgetState createState() => _TickerSearchWidgetState();
+}
+
+class _TickerSearchWidgetState extends State<TickerSearchWidget> {
+  late TextEditingController _controller;
+  late String query;
+  late ScrollController _internalScrollController;
 
   @override
-  Widget buildLeading(BuildContext context) => IconButton(
-      icon: const Icon(Icons.arrow_back),
-      onPressed: () {
-        close(context, []);
-      });
+  void initState() {
+    super.initState();
+    query = widget.initialQuery;
+    _controller = TextEditingController(text: query);
+    _internalScrollController = widget.scrollController ?? ScrollController();
+  }
 
   @override
-  Widget buildResults(BuildContext context) => InkWell(
-        onTap: () => close(context, [
-          StockTicker(
-            symbol: query.toUpperCase(),
-            description: query.toUpperCase(),
-          )
-        ]),
-        child: TickerWidget(
-          symbol: query.toUpperCase(),
-          onSelection: (StockTicker ticker) {
-            close(context, [ticker]);
-          },
-        ),
-      );
+  void dispose() {
+    _controller.dispose();
+    if (widget.scrollController == null) {
+      _internalScrollController.dispose();
+    }
+    super.dispose();
+  }
 
   @override
-  Widget buildSuggestions(BuildContext context) {
-    final List<Widget> allItems = filterItems(context);
-
+  Widget build(BuildContext context) {
+    final List<Widget> allItems = _filterItems(context);
     return Column(
       children: [
-        selectionButtons(context),
-        Expanded(
-          child: ListView.builder(
-            itemCount: allItems.length,
-            itemBuilder: (context, index) => allItems[index],
+        // Search text field
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            controller: _controller,
+            decoration: InputDecoration(
+              labelText: 'Search ticker',
+              suffixIcon: query.isNotEmpty
+                  ? IconButton(
+                icon: const Icon(Icons.clear),
+                onPressed: () {
+                  setState(() {
+                    query = '';
+                    _controller.clear();
+                  });
+                  widget.onGeneralQueryChanged?.call('');
+                },
+              )
+                  : null,
+              border: const OutlineInputBorder(),
+            ),
+            onChanged: (value) {
+              setState(() {
+                query = value;
+              });
+              widget.onGeneralQueryChanged?.call(query);
+            },
           ),
         ),
-      ],
-    );
-  }
-
-  // Helper method to create the title widget
-  Widget suggestionTitle(
-    Widget icon,
-    String title,
-    BuildContext context,
-    Iterable<MapEntry<String, String>> filteredTickers,
-  ) {
-    void onPressed() {
-      final List<StockTicker> tickers = filteredTickers
-          .map((entry) => StockTicker(
-                symbol: entry.key,
-                description: entry.value,
-              ))
-          .toList();
-
-      close(context, tickers);
-    }
-
-    Widget addAllFinalButton = MaterialButton(
-      color: Theme.of(context).colorScheme.primary,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      onPressed: onPressed,
-      child: const Text('Add all'),
-    );
-
-    if (addAllButton != null) {
-      // Copy the button and add the onPressed
-      addAllFinalButton = InkWell(
-        onTap: onPressed,
-        child: addAllButton,
-      );
-    }
-
-    final int size = filteredTickers.length;
-
-    return GestureDetector(
-      onTap: () {
-        // Unfocus keyboard
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
-      child: ListTile(
-        leading: icon,
-        title: Text('$title ($size)'),
-        trailing: addAllFinalButton,
-      ),
-    );
-  }
-
-  Widget selectionButtons(BuildContext context) => SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: GestureDetector(
-          onTap: () {
-            // Unfocus keyboard
-            FocusManager.instance.primaryFocus?.unfocus();
-          },
+        // Horizontal selection buttons
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
           child: Row(
-            children: suggestions.map((suggestion) {
-              final bool selected = suggestion.title == query;
+            children: widget.suggestions.map((suggestion) {
+              // Compare suggestion title to query in a case-insensitive way.
+              final bool selected =
+                  suggestion.title.toLowerCase() == query.toLowerCase();
               final Color color = selected
                   ? Theme.of(context).colorScheme.secondary
                   : Theme.of(context).colorScheme.onSurface;
@@ -143,69 +120,91 @@ class TickerSearch extends SearchDelegate<List<StockTicker>> {
                     const SizedBox(width: 8),
                     Text(
                       suggestion.title,
-                      style: TextStyle(
-                        color: color,
-                      ),
+                      style: TextStyle(color: color),
                     ),
                   ],
                 ),
                 onPressed: () {
-                  // Update the query with the selected suggestion title
-                  query = suggestion.title;
-
-                  // Unfocus keyboard
-                  FocusManager.instance.primaryFocus?.unfocus();
+                  setState(() {
+                    query = suggestion.title;
+                    _controller.text = suggestion.title;
+                  });
+                  // Fire the suggestion button pressed event.
+                  widget.onSuggestionButtonPressed?.call(suggestion.title);
                 },
               );
             }).toList(),
           ),
         ),
-      );
+        const Divider(),
+        // ListView with filtered ticker items and suggestion groups.
+        Expanded(
+          child: ListView.builder(
+            controller: _internalScrollController,
+            itemCount: allItems.length,
+            itemBuilder: (context, index) => allItems[index],
+          ),
+        ),
+      ],
+    );
+  }
 
-  List<Widget> filterItems(BuildContext context) {
+  /// Returns a list of widgets based on the current query.
+  List<Widget> _filterItems(BuildContext context) {
     final List<Widget> allItems = [];
 
-    if (query.isNotEmpty) {
+    // Only add a ticker widget for the query if it's not an exact suggestion title.
+    if (query.isNotEmpty &&
+        !widget.suggestions
+            .map((e) => e.title.toLowerCase())
+            .contains(query.toLowerCase())) {
       allItems.add(
         TickerWidget(
           symbol: query.toUpperCase(),
           onSelection: (StockTicker ticker) {
-            close(context, [ticker]);
+            // Since this is not a suggestion group state, update the query.
+            setState(() {
+              query = ticker.symbol;
+              _controller.text = ticker.symbol;
+            });
+            widget.onTickersSelected?.call([ticker]);
           },
         ),
       );
     }
 
-    final List<String> suggestionsTitles =
-        suggestions.map((e) => e.title).toList();
+    final List<String> suggestionTitles =
+    widget.suggestions.map((e) => e.title.toLowerCase()).toList();
 
-    if (suggestionsTitles.contains(query)) {
-      final TickerSuggestion tickerSuggestion =
-          suggestions.where((element) => element.title == query).toList().first;
-
-      addSuggestionToItems(tickerSuggestion, context, allItems, false);
+    if (suggestionTitles.contains(query.toLowerCase())) {
+      final TickerSuggestion tickerSuggestion = widget.suggestions.firstWhere(
+              (element) => element.title.toLowerCase() == query.toLowerCase());
+      _addSuggestionToItems(tickerSuggestion, context, allItems, false);
     } else {
-      // Flatten all ticker blocks into a single list of widgets
-      suggestions.forEach((TickerSuggestion suggestion) {
-        addSuggestionToItems(suggestion, context, allItems, true);
-      });
+      // If not an exact match, show all suggestion groups.
+      for (final suggestion in widget.suggestions) {
+        _addSuggestionToItems(suggestion, context, allItems, true);
+      }
     }
-
     return allItems;
   }
 
-  void addSuggestionToItems(TickerSuggestion suggestion, BuildContext context,
-      List<Widget> allItems, bool filterByText) {
-    // Filter and add ticker widgets
+  /// Helper to add suggestion items (a title and list of ticker widgets) to [allItems].
+  void _addSuggestionToItems(
+      TickerSuggestion suggestion,
+      BuildContext context,
+      List<Widget> allItems,
+      bool filterByText) {
     Iterable<MapEntry<String, String>> filteredTickers =
         suggestion.tickers.entries;
+    final Widget titleWidget = _suggestionTitle(
+      suggestion.icon,
+      suggestion.title,
+      context,
+      filteredTickers,
+    );
+    allItems.add(titleWidget);
 
-    // Add title widget
-    final Widget title = suggestionTitle(
-        suggestion.icon, suggestion.title, context, filteredTickers);
-    allItems.add(title);
-
-    // Apply possible filter
     if (filterByText) {
       filteredTickers = filteredTickers.where((entry) {
         final String lowerCaseQuery = query.toLowerCase();
@@ -216,13 +215,67 @@ class TickerSearch extends SearchDelegate<List<StockTicker>> {
 
     allItems.addAll(
       filteredTickers.map(
-        (entry) => TickerWidget(
+            (entry) => TickerWidget(
           symbol: entry.key,
           description: entry.value,
           onSelection: (StockTicker ticker) {
-            close(context, [ticker]);
+            // When in a suggestion group state, do not update query.
+            if (!widget.suggestions
+                .map((s) => s.title.toLowerCase())
+                .contains(query.toLowerCase())) {
+              setState(() {
+                query = ticker.symbol;
+                _controller.text = ticker.symbol;
+              });
+            }
+            widget.onTickersSelected?.call([ticker]);
           },
         ),
+      ),
+    );
+  }
+
+  /// Creates a title widget for a suggestion group with an "Add all" button.
+  Widget _suggestionTitle(
+      Widget icon,
+      String title,
+      BuildContext context,
+      Iterable<MapEntry<String, String>> filteredTickers,
+      ) {
+    void onPressed() {
+      final List<StockTicker> tickers = filteredTickers
+          .map((entry) => StockTicker(
+        symbol: entry.key,
+        description: entry.value,
+      ))
+          .toList();
+      widget.onTickersSelected?.call(tickers);
+    }
+
+    Widget addAllFinalButton = MaterialButton(
+      color: Theme.of(context).colorScheme.primary,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      onPressed: onPressed,
+      child: const Text('Add all'),
+    );
+
+    if (widget.addAllButton != null) {
+      addAllFinalButton = InkWell(
+        onTap: onPressed,
+        child: widget.addAllButton,
+      );
+    }
+
+    final int size = filteredTickers.length;
+
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: ListTile(
+        leading: icon,
+        title: Text('$title ($size)'),
+        trailing: addAllFinalButton,
       ),
     );
   }
