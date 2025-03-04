@@ -26,14 +26,14 @@ class TickerSearchWidget extends StatefulWidget {
   final void Function(List<StockTicker>)? onTickersSelected;
 
   const TickerSearchWidget({
-    Key? key,
+    super.key,
     required this.suggestions,
     this.addAllButton,
     this.scrollController,
     this.initialQuery = '',
     this.onSuggestionButtonPressed,
     this.onTickersSelected,
-  }) : super(key: key);
+  });
 
   @override
   _TickerSearchWidgetState createState() => _TickerSearchWidgetState();

@@ -7,16 +7,22 @@ import 'package:ticker_search/src/ticker_search.dart';
 /// When tickers are selected, it pops with a SearchResult containing the tickers and, if applicable,
 /// the suggestion button event.
 class TickerSearchPage extends StatefulWidget {
+
+  /// The initial query to prefill the search field.
   final String initialQuery;
+
+  /// External scroll controller to preserve scroll state.
   final ScrollController scrollController;
+
+  /// A list of [TickerSuggestion] that provides icon, title, and ticker information.
   final List<TickerSuggestion> suggestions;
 
   const TickerSearchPage({
-    Key? key,
     required this.initialQuery,
     required this.scrollController,
     required this.suggestions,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   _TickerSearchPageState createState() => _TickerSearchPageState();

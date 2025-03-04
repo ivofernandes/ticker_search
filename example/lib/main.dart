@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:stock_market_data/stock_market_data.dart';
-import 'package:ticker_search/src/model/ticker_suggestion.dart';
 import 'package:ticker_search/ticker_search.dart';
 
 void main() {
@@ -66,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
             // Tap this area to navigate to the search page.
             InkWell(
               child: Container(
-                color: Colors.lightBlue.withOpacity(0),
+                color: Colors.lightBlue.withValues(alpha: 0),
                 padding: const EdgeInsets.only(
                   left: 40,
                   right: 40,
