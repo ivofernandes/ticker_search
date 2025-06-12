@@ -26,13 +26,13 @@ class TickerSearchWidget extends StatefulWidget {
   final void Function(List<StockTicker>)? onTickersSelected;
 
   const TickerSearchWidget({
-    super.key,
     required this.suggestions,
     this.addAllButton,
     this.scrollController,
     this.initialQuery = '',
     this.onSuggestionButtonPressed,
     this.onTickersSelected,
+    super.key,
   });
 
   @override
@@ -68,7 +68,7 @@ class _TickerSearchWidgetState extends State<TickerSearchWidget> {
       children: [
         // Search text field
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8),
           child: TextField(
             controller: _controller,
             decoration: InputDecoration(

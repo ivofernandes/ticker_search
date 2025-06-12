@@ -52,7 +52,7 @@ class TickerWidget extends StatelessWidget {
                   ),
                   child: ColoredBox(
                     color:
-                        Theme.of(context).colorScheme.surface.withValues(alpha:0.3),
+                        Theme.of(context).colorScheme.surface.withAlpha(77),
                     child: Center(
                       child: Text(
                         symbol.toUpperCase(),

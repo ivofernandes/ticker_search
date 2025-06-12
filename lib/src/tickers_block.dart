@@ -8,7 +8,7 @@ class TickersBlock extends StatelessWidget {
   final String title;
   final Map<String, String> tickers;
   final String query;
-  final Function close;
+  final void Function(BuildContext, List<StockTicker>) close;
 
   /// Constructs a [TickersBlock] widget.
   ///
