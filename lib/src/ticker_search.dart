@@ -43,6 +43,7 @@ class _TickerSearchWidgetState extends State<TickerSearchWidget> {
   late TextEditingController _controller;
   late String query;
   late ScrollController _internalScrollController;
+  double lastScrollOffset = 0;
 
   @override
   void initState() {
@@ -50,19 +51,22 @@ class _TickerSearchWidgetState extends State<TickerSearchWidget> {
     query = widget.initialQuery;
     _controller = TextEditingController(text: query);
     _internalScrollController = widget.scrollController ?? ScrollController();
+
+    _internalScrollController.addListener(() {
+      lastScrollOffset = _internalScrollController.position.pixels;
+    });
   }
 
   @override
   void dispose() {
+    debugPrint('Scroll on exit: $lastScrollOffset');
     _controller.dispose();
-    if (widget.scrollController == null) {
-      _internalScrollController.dispose();
-    }
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('Controller hash: ${widget.scrollController.hashCode}');
     final List<Widget> allItems = _filterItems(context);
     return Column(
       children: [
@@ -134,6 +138,7 @@ class _TickerSearchWidgetState extends State<TickerSearchWidget> {
         // ListView with filtered ticker items and suggestion groups.
         Expanded(
           child: ListView.builder(
+            key: const PageStorageKey<String>('ticker_list'),
             controller: _internalScrollController,
             itemCount: allItems.length,
             itemBuilder: (context, index) => allItems[index],
