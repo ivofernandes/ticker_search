@@ -49,6 +49,11 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final String ticketDescription = TickerResolve.getTickerDescription(selected);
     return Scaffold(

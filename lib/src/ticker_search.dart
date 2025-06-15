@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stock_market_data/stock_market_data.dart';
 import 'package:ticker_search/src/model/ticker_suggestion.dart';
 import 'package:ticker_search/src/ticker_widget_ui.dart';
@@ -52,6 +53,23 @@ class _TickerSearchWidgetState extends State<TickerSearchWidget> {
     _controller = TextEditingController(text: query);
     _internalScrollController = widget.scrollController ?? ScrollController();
 
+    // Restore after first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final prefs = await SharedPreferences.getInstance();
+      final savedOffset = prefs.getDouble('last_scroll_offset') ?? 0;
+
+      if (_internalScrollController.hasClients) {
+        _internalScrollController.jumpTo(savedOffset);
+      } else {
+        // If not attached yet, delay slightly more
+        Future.delayed(Duration(milliseconds: 100), () {
+          if (_internalScrollController.hasClients) {
+            _internalScrollController.jumpTo(savedOffset);
+          }
+        });
+      }
+    });
+
     _internalScrollController.addListener(() {
       lastScrollOffset = _internalScrollController.position.pixels;
     });
@@ -59,7 +77,11 @@ class _TickerSearchWidgetState extends State<TickerSearchWidget> {
 
   @override
   void dispose() {
-    debugPrint('Scroll on exit: $lastScrollOffset');
+    // Persist the last scroll offset to SharedPreferences
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setDouble('last_scroll_offset', lastScrollOffset);
+    });
+
     _controller.dispose();
     super.dispose();
   }
