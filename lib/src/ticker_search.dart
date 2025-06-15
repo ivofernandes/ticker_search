@@ -7,7 +7,7 @@ import 'package:ticker_search/src/ticker_widget_ui.dart';
 /// A normal widget that provides ticker search functionality.
 /// It features a text field for entering queries, horizontal selection buttons,
 /// and a scrollable list of ticker suggestions.
-class TickerSearchWidget extends StatefulWidget {
+class TickerSearch extends StatefulWidget {
   /// A list of [TickerSuggestion] that provides icon, title, and ticker information.
   final List<TickerSuggestion> suggestions;
 
@@ -26,7 +26,7 @@ class TickerSearchWidget extends StatefulWidget {
   /// Callback to notify when one or more tickers are selected.
   final void Function(List<StockTicker>)? onTickersSelected;
 
-  const TickerSearchWidget({
+  const TickerSearch({
     required this.suggestions,
     this.addAllButton,
     this.scrollController,
@@ -37,10 +37,10 @@ class TickerSearchWidget extends StatefulWidget {
   });
 
   @override
-  _TickerSearchWidgetState createState() => _TickerSearchWidgetState();
+  _TickerSearchState createState() => _TickerSearchState();
 }
 
-class _TickerSearchWidgetState extends State<TickerSearchWidget> {
+class _TickerSearchState extends State<TickerSearch> {
   late TextEditingController _controller;
   late String query;
   late ScrollController _internalScrollController;
@@ -62,7 +62,7 @@ class _TickerSearchWidgetState extends State<TickerSearchWidget> {
         _internalScrollController.jumpTo(savedOffset);
       } else {
         // If not attached yet, delay slightly more
-        Future.delayed(Duration(milliseconds: 100), () {
+        Future.delayed(const Duration(milliseconds: 100), () {
           if (_internalScrollController.hasClients) {
             _internalScrollController.jumpTo(savedOffset);
           }

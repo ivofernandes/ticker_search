@@ -36,7 +36,7 @@ class _TickerSearchPageState extends State<TickerSearchPage> {
         appBar: AppBar(
           title: const Text('Search Ticker'),
         ),
-        body: TickerSearchWidget(
+        body: TickerSearch(
           suggestions: widget.suggestions,
           initialQuery: widget.initialQuery,
           scrollController: widget.scrollController,

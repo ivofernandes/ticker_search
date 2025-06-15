@@ -24,3 +24,6 @@ Updated stock_market_data
 
 ## 0.0.9
 Now keeps the scroll position over multiple searches
+
+## 0.0.10
+TickerSearch fix
