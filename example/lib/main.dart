@@ -11,10 +11,10 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) => MaterialApp(
-    title: 'Ticker Search Demo',
-    theme: ThemeData.dark(),
-    home: const MyHomePage(title: 'Ticker search demo'),
-  );
+        title: 'Ticker Search Demo',
+        theme: ThemeData.dark(),
+        home: const MyHomePage(title: 'Ticker search demo'),
+      );
 }
 
 /// The home page displays the last selected ticker and an add button.
@@ -38,14 +38,22 @@ class _MyHomePageState extends State<MyHomePage> {
   // List of suggestions used by the search widget.
   final List<TickerSuggestion> suggestions = [
     TickerSuggestion(const Icon(Icons.view_headline), 'Main', TickersList.main),
-    TickerSuggestion(const Icon(Icons.euro), 'Euro ETFs', TickersList.europeanEtfs),
-    TickerSuggestion(const Icon(Icons.business_sharp), 'Companies', TickersList.companies),
-    TickerSuggestion(const Icon(Icons.precision_manufacturing_outlined), 'Sectors', TickersList.sectors),
-    TickerSuggestion(const Icon(Icons.workspaces_outline), 'Futures', TickersList.futures),
-    TickerSuggestion(const Icon(Icons.computer), 'Cryptos', TickersList.cryptoCurrencies),
-    TickerSuggestion(const Icon(Icons.language), 'Countries', TickersList.countries),
-    TickerSuggestion(const Icon(Icons.account_balance_outlined), 'Bonds', TickersList.bonds),
-    TickerSuggestion(const Icon(Icons.architecture_sharp), 'Sizes', TickersList.sizes),
+    TickerSuggestion(
+        const Icon(Icons.euro), 'Euro ETFs', TickersList.europeanEtfs),
+    TickerSuggestion(
+        const Icon(Icons.business_sharp), 'Companies', TickersList.companies),
+    TickerSuggestion(const Icon(Icons.precision_manufacturing_outlined),
+        'Sectors', TickersList.sectors),
+    TickerSuggestion(
+        const Icon(Icons.workspaces_outline), 'Futures', TickersList.futures),
+    TickerSuggestion(
+        const Icon(Icons.computer), 'Cryptos', TickersList.cryptoCurrencies),
+    TickerSuggestion(
+        const Icon(Icons.language), 'Countries', TickersList.countries),
+    TickerSuggestion(
+        const Icon(Icons.account_balance_outlined), 'Bonds', TickersList.bonds),
+    TickerSuggestion(
+        const Icon(Icons.architecture_sharp), 'Sizes', TickersList.sizes),
   ];
 
   @override
@@ -55,7 +63,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final String ticketDescription = TickerResolve.getTickerDescription(selected);
+    final String ticketDescription =
+        TickerResolve.getTickerDescription(selected);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -96,12 +105,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 if (result != null && result.tickers.isNotEmpty) {
                   setState(() {
                     // For demonstration, join all selected ticker symbols.
-                    selected = result.tickers.reduce((value, element) => value.copyWith(
-                      symbol: value.symbol.isEmpty
-                          ? element.symbol
-                          : '${value.symbol}, ${element.symbol}',
-                      description: '',
-                    ));
+                    selected = result.tickers
+                        .reduce((value, element) => value.copyWith(
+                              symbol: value.symbol.isEmpty
+                                  ? element.symbol
+                                  : '${value.symbol}, ${element.symbol}',
+                              description: '',
+                            ));
                     // Update lastQuery only if a suggestion button was pressed.
                     if (result.suggestion != null) {
                       lastQuery = result.suggestion!;

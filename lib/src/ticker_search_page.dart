@@ -7,7 +7,6 @@ import 'package:ticker_search/src/ticker_search.dart';
 /// When tickers are selected, it pops with a SearchResult containing the tickers and, if applicable,
 /// the suggestion button event.
 class TickerSearchPage extends StatefulWidget {
-
   /// The initial query to prefill the search field.
   final String initialQuery;
 
@@ -34,22 +33,22 @@ class _TickerSearchPageState extends State<TickerSearchPage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(
-        title: const Text('Search Ticker'),
-      ),
-      body: TickerSearchWidget(
-        suggestions: widget.suggestions,
-        initialQuery: widget.initialQuery,
-        scrollController: widget.scrollController,
-        onSuggestionButtonPressed: (suggestion) {
-          setState(() {
-            selectedSuggestion = suggestion;
-          });
-        },
-        onTickersSelected: (tickers) {
-          // Return a SearchResult with the selected tickers and the suggestion (if any).
-          Navigator.pop(context, SearchResult(tickers, selectedSuggestion));
-        },
-      ),
-    );
+        appBar: AppBar(
+          title: const Text('Search Ticker'),
+        ),
+        body: TickerSearchWidget(
+          suggestions: widget.suggestions,
+          initialQuery: widget.initialQuery,
+          scrollController: widget.scrollController,
+          onSuggestionButtonPressed: (suggestion) {
+            setState(() {
+              selectedSuggestion = suggestion;
+            });
+          },
+          onTickersSelected: (tickers) {
+            // Return a SearchResult with the selected tickers and the suggestion (if any).
+            Navigator.pop(context, SearchResult(tickers, selectedSuggestion));
+          },
+        ),
+      );
 }

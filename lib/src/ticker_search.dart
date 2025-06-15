@@ -101,14 +101,14 @@ class _TickerSearchWidgetState extends State<TickerSearchWidget> {
               labelText: 'Search ticker',
               suffixIcon: query.isNotEmpty
                   ? IconButton(
-                icon: const Icon(Icons.clear),
-                onPressed: () {
-                  setState(() {
-                    query = '';
-                    _controller.clear();
-                  });
-                },
-              )
+                      icon: const Icon(Icons.clear),
+                      onPressed: () {
+                        setState(() {
+                          query = '';
+                          _controller.clear();
+                        });
+                      },
+                    )
                   : null,
               border: const OutlineInputBorder(),
             ),
@@ -195,11 +195,11 @@ class _TickerSearchWidgetState extends State<TickerSearchWidget> {
     }
 
     final List<String> suggestionTitles =
-    widget.suggestions.map((e) => e.title.toLowerCase()).toList();
+        widget.suggestions.map((e) => e.title.toLowerCase()).toList();
 
     if (suggestionTitles.contains(query.toLowerCase())) {
       final TickerSuggestion tickerSuggestion = widget.suggestions.firstWhere(
-              (element) => element.title.toLowerCase() == query.toLowerCase());
+          (element) => element.title.toLowerCase() == query.toLowerCase());
       _addSuggestionToItems(tickerSuggestion, context, allItems, false);
     } else {
       // If not an exact match, show all suggestion groups.
@@ -211,11 +211,8 @@ class _TickerSearchWidgetState extends State<TickerSearchWidget> {
   }
 
   /// Helper to add suggestion items (a title and list of ticker widgets) to [allItems].
-  void _addSuggestionToItems(
-      TickerSuggestion suggestion,
-      BuildContext context,
-      List<Widget> allItems,
-      bool filterByText) {
+  void _addSuggestionToItems(TickerSuggestion suggestion, BuildContext context,
+      List<Widget> allItems, bool filterByText) {
     Iterable<MapEntry<String, String>> filteredTickers =
         suggestion.tickers.entries;
     final Widget titleWidget = _suggestionTitle(
@@ -236,7 +233,7 @@ class _TickerSearchWidgetState extends State<TickerSearchWidget> {
 
     allItems.addAll(
       filteredTickers.map(
-            (entry) => TickerWidget(
+        (entry) => TickerWidget(
           symbol: entry.key,
           description: entry.value,
           onSelection: (StockTicker ticker) {
@@ -258,17 +255,17 @@ class _TickerSearchWidgetState extends State<TickerSearchWidget> {
 
   /// Creates a title widget for a suggestion group with an "Add all" button.
   Widget _suggestionTitle(
-      Widget icon,
-      String title,
-      BuildContext context,
-      Iterable<MapEntry<String, String>> filteredTickers,
-      ) {
+    Widget icon,
+    String title,
+    BuildContext context,
+    Iterable<MapEntry<String, String>> filteredTickers,
+  ) {
     void onPressed() {
       final List<StockTicker> tickers = filteredTickers
           .map((entry) => StockTicker(
-        symbol: entry.key,
-        description: entry.value,
-      ))
+                symbol: entry.key,
+                description: entry.value,
+              ))
           .toList();
       widget.onTickersSelected?.call(tickers);
     }
