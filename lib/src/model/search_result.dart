@@ -5,4 +5,12 @@ class SearchResult {
   final List<StockTicker> tickers;
   final String? suggestion;
   SearchResult(this.tickers, this.suggestion);
+
+  StockTicker get getTicker =>
+      tickers.reduce((value, element) => value.copyWith(
+            symbol: value.symbol.isEmpty
+                ? element.symbol
+                : '${value.symbol}, ${element.symbol}',
+            description: '',
+          ));
 }

@@ -34,27 +34,22 @@ import 'package:ticker_search/ticker_search.dart';
 Use the `TickerSearch` widget:
 
 ```dart
-final List<StockTicker>? tickers = await showSearch(
-  context: context,
-  delegate: TickerSearch(
-    searchFieldLabel: 'Add',
-    suggestions: [
-      TickerSuggestion(const Icon(Icons.view_headline), 'Main', TickersList.main),
-      TickerSuggestion(const Icon(Icons.business_sharp), 'Companies', TickersList.companies),
-      TickerSuggestion(const Icon(Icons.precision_manufacturing_outlined), 'Sectors', TickersList.sectors),
-      TickerSuggestion(const Icon(Icons.workspaces_outline), 'Futures', TickersList.futures),
-      TickerSuggestion(const Icon(Icons.computer), 'Cryptos', TickersList.cryptoCurrencies),
-      TickerSuggestion(const Icon(Icons.language), 'Countries', TickersList.countries),
-      TickerSuggestion(const Icon(Icons.account_balance_outlined), 'Bonds', TickersList.bonds),
-      TickerSuggestion(const Icon(Icons.architecture_sharp), 'Sizes', TickersList.sizes),
-    ],
-  ),
-);
+final SearchResult? result = await Navigator.push(
+    context,
+    MaterialPageRoute(
+        builder: (context) => TickerSearchPage(),
+        ),
+    );
+    if (result != null) {
+        setState(() {
+        simplerExampleSelected = result.getTicker;
+    });
+}
 ```
 
 ### Example
 
 You can check the example application and see how to use the package.
 
-![Pluralize demo](https://raw.githubusercontent.com/ivofernandes/ticker_search/main/doc/search_ticker_search.png)
+![Ticker search demo](https://raw.githubusercontent.com/ivofernandes/ticker_search/main/doc/search_ticker_search.png)
 

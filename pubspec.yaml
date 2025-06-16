@@ -1,6 +1,6 @@
 name: ticker_search
 description: A new Flutter package to search for tickers of companies, ETFs, and cryptocurrencies.
-version: 0.0.10
+version: 1.0.0
 homepage: https://incaview.com
 repository: https://github.com/ivofernandes/ticker_search
 issue_tracker: https://github.com/ivofernandes/ticker_search/issues

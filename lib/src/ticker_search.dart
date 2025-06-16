@@ -93,14 +93,40 @@ class _TickerSearchState extends State<TickerSearch> {
     return Column(
       children: [
         // Search text field
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: TextField(
-            controller: _controller,
-            decoration: InputDecoration(
-              labelText: 'Search ticker',
-              suffixIcon: query.isNotEmpty
-                  ? IconButton(
+        Row(
+          children: [
+            // Back button
+            Container(
+              padding: const EdgeInsets.only(left: 8, top: 8, bottom: 8),
+              child: IconButton(
+                icon: const Icon(Icons.arrow_back_ios),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: TextField(
+                  controller: _controller,
+                  decoration: InputDecoration(
+                    labelText: 'Search ticker',
+                    border: const OutlineInputBorder(),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      query = value;
+                    });
+                  },
+                ),
+              ),
+            ),
+            // Clear button
+            Container(
+              child: query.isEmpty
+                  ? SizedBox.shrink()
+                  : IconButton(
                       icon: const Icon(Icons.clear),
                       onPressed: () {
                         setState(() {
@@ -108,16 +134,9 @@ class _TickerSearchState extends State<TickerSearch> {
                           _controller.clear();
                         });
                       },
-                    )
-                  : null,
-              border: const OutlineInputBorder(),
+                    ),
             ),
-            onChanged: (value) {
-              setState(() {
-                query = value;
-              });
-            },
-          ),
+          ],
         ),
         // Horizontal selection buttons
         SingleChildScrollView(

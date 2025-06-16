@@ -27,3 +27,6 @@ Now keeps the scroll position over multiple searches
 
 ## 0.0.10
 TickerSearch fix
+
+## 1.0.0
+New way to use the package, dropped search delegate

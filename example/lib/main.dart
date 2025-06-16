@@ -35,6 +35,9 @@ class _MyHomePageState extends State<MyHomePage> {
   // A shared scroll controller to preserve scroll position.
   final ScrollController scrollController = ScrollController();
 
+  StockTicker simplerExampleSelected =
+      const StockTicker(symbol: '', description: '');
+
   // List of suggestions used by the search widget.
   final List<TickerSuggestion> suggestions = [
     TickerSuggestion(const Icon(Icons.view_headline), 'Main', TickersList.main),
@@ -105,17 +108,47 @@ class _MyHomePageState extends State<MyHomePage> {
                 if (result != null && result.tickers.isNotEmpty) {
                   setState(() {
                     // For demonstration, join all selected ticker symbols.
-                    selected = result.tickers
-                        .reduce((value, element) => value.copyWith(
-                              symbol: value.symbol.isEmpty
-                                  ? element.symbol
-                                  : '${value.symbol}, ${element.symbol}',
-                              description: '',
-                            ));
+                    selected = result.getTicker;
                     // Update lastQuery only if a suggestion button was pressed.
                     if (result.suggestion != null) {
                       lastQuery = result.suggestion!;
                     }
+                  });
+                }
+              },
+            ),
+            SizedBox(
+              height: 50,
+            ),
+            Text('Simpler example'),
+            Text(
+                '${simplerExampleSelected.symbol} > ${simplerExampleSelected.description}'),
+
+            // Tap this area to navigate to the simpler search page.
+            InkWell(
+              child: Container(
+                color: Colors.lightBlue.withValues(alpha: 0),
+                padding: const EdgeInsets.only(
+                  left: 40,
+                  right: 40,
+                  bottom: 30,
+                ),
+                child: const Icon(
+                  Icons.add,
+                  size: 40,
+                ),
+              ),
+              onTap: () async {
+                // Navigate to TickerSearchPage with a simpler example.
+                final SearchResult? result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TickerSearchPage(),
+                  ),
+                );
+                if (result != null) {
+                  setState(() {
+                    simplerExampleSelected = result.getTicker;
                   });
                 }
               },
